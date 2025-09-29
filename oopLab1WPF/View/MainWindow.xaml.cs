@@ -20,7 +20,7 @@ namespace oopLab1WPF
 				fastFood.AddServers(new Server(1000));
 
 			}
-			var viewModel = new FastFoodViewModel(fastFood);
+			var viewModel = new FastFoodViewModel();
 
 			DataContext = viewModel;
 			Title = "Fast Food";

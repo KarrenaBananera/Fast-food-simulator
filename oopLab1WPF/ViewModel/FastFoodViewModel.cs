@@ -27,8 +27,8 @@ public class FastFoodViewModel : INotifyPropertyChanged
 	private IEnumerable<IWorker>? _oldCollectionTakers = null;
 
 	private int _customers;
-	private string _customersDelay;
-	private string _workersWorkTime;
+	private string _customersDelay = "0.5";
+	private string _workersWorkTime = "1,5";
 
 	public ICommand StartCommand { get; }
 	public ICommand AddCookCommand { get; }
@@ -123,7 +123,7 @@ public class FastFoodViewModel : INotifyPropertyChanged
 	private int GetValueInt(string value)
 	{
 		double result = 0;
-		if (!double.TryParse(WorkersWorkTime, CultureInfo.InvariantCulture, out result) || result <= 0)
+		if (!double.TryParse(value, CultureInfo.InvariantCulture, out result) || result <= 0)
 		{
 			MessageBox.Show($"Неверное время: {value}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
 			return -1;
@@ -133,6 +133,8 @@ public class FastFoodViewModel : INotifyPropertyChanged
 	}
 	private void Refresh()
 	{
+		if (_fastFood is null)
+			return;
 		RefreshCustomers();
 		RefreshCollections();
 	}
