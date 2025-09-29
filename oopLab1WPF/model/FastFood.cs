@@ -47,6 +47,7 @@ public class FastFood
 	{
 		lock (_customerArrival)
 		{
+			Console.WriteLine("Тикет передан на кухню: " + ticket.customer.Name);
 			_kitchen.AddTicket(ticket);
 		}
 	}
@@ -55,6 +56,8 @@ public class FastFood
 	{
 		lock (_customerArrival)
 		{
+			Console.WriteLine("Тикет передан офицантскому корпусу: " + ticket.customer.Name);
+
 			_servers.AddTicket(ticket);
 		}
 	}
@@ -63,6 +66,7 @@ public class FastFood
 	{
 		lock (_customerArrival)
 		{
+			Console.WriteLine("Тикет передан посетителю!!!: " + ticket.customer.Name);
 			Customers--;
 		}
 	}
@@ -80,6 +84,7 @@ public class FastFood
 				arrivedCustomer.Order, Guid.NewGuid().ToString());
 
 			Customers++;
+			Console.WriteLine("Появился кастомер, передан кассирам: " + arrivedCustomer.Name);
 			_takers.AddTicket(ticket);
 		}
 	}

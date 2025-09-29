@@ -7,4 +7,4 @@ using System.Threading.Tasks;
 
 namespace oopLab1WPF;
 
-public record struct Order(double CookTime);
+public record struct Order(int CookTime);

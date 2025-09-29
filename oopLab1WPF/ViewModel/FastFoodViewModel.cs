@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -12,8 +14,8 @@ namespace oopLab1WPF;
 
 public class FastFoodViewModel : INotifyPropertyChanged
 {
-	private readonly FastFood _fastFood;
-	private readonly DispatcherTimer _refreshTimer;
+	private FastFood? _fastFood;
+	private DispatcherTimer _refreshTimer;
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	public ObservableCollection<WorkerViewModel> KitchenWorkers { get; } = new();
@@ -24,8 +26,34 @@ public class FastFoodViewModel : INotifyPropertyChanged
 	private IEnumerable<IWorker>? _oldCollectionServers = null;
 	private IEnumerable<IWorker>? _oldCollectionTakers = null;
 
-	private Dictionary<IWorker, bool> _oldWorking = new();
 	private int _customers;
+	private string _customersDelay;
+	private string _workersWorkTime;
+
+	public ICommand StartCommand { get; }
+	public ICommand AddCookCommand { get; }
+	public ICommand AddTakerCommand { get; }
+	public ICommand AddServerCommand { get; }
+
+	public string CustomersDelay
+	{
+		get => _customersDelay;
+		set
+		{
+			_customersDelay = value;
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CustomersDelay)));
+		}
+	}
+
+	public string WorkersWorkTime
+	{
+		get => _workersWorkTime;
+		set
+		{
+			_workersWorkTime = value;
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WorkersWorkTime)));
+		}
+	}
 	public int Customers
 	{
 		get => _customers;
@@ -36,11 +64,9 @@ public class FastFoodViewModel : INotifyPropertyChanged
 		}
 	}
 
-	public ICommand StartCommand { get; }
 
-	public FastFoodViewModel(FastFood fastFood)
+	public FastFoodViewModel()
 	{
-		_fastFood = fastFood;
 
 		StartCommand = new Command(Start);
 
@@ -54,33 +80,63 @@ public class FastFoodViewModel : INotifyPropertyChanged
 
 	private void Start()
 	{
+		if (_fastFood is not null)
+			return;
+
+		var customersArrivalTime = GetValueInt(_customersDelay);
+
+		if (customersArrivalTime == -1)
+			return;
+
+		_fastFood = new FastFood(new RandomCustomerArrival(customersArrivalTime, 
+			customersArrivalTime/3, 
+			customersArrivalTime *5));
 		_fastFood.Start();
 		Refresh();
 	}
 
+	private void AddCook()
+	{
+		GetValueInt(_workersWorkTime);
+
+		if (_fastFood is not null)
+			_fastFood.AddCooks(new Cook());
+	}
+
+	private void AddTaker()
+	{
+
+		var value = GetValueInt(_workersWorkTime);
+
+		if (value != -1 && _fastFood is not null)
+			_fastFood.AddTakers(new Taker(value));
+	}
+
+	private void AddServer()
+	{
+		var value = GetValueInt(_workersWorkTime);
+
+		if (value != -1 && _fastFood is not null)
+			_fastFood.AddServers(new Server(value));
+	}
+
+	private int GetValueInt(string value)
+	{
+		double result = 0;
+		if (!double.TryParse(WorkersWorkTime, CultureInfo.InvariantCulture, out result) || result <= 0)
+		{
+			MessageBox.Show($"Неверное время: {value}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+			return -1;
+		}
+
+		return (int)(result * 1000);
+	}
 	private void Refresh()
 	{
 		RefreshCustomers();
 		RefreshCollections();
-		//RefreshWorking();
 	}
 
-	//private void RefreshWorking()
-	//{
-	//	var allWorkers = _oldCollectionKitchen.Concat(_oldCollectionTakers).Concat(_oldCollectionServers);
-
-	//	foreach(var worker in allWorkers)
-	//	{
-	//		if (_oldWorking.TryGetValue(worker, out bool oldWorking))
-	//		{
-	//			if (worker.IsWorking != oldWorking) 
-	//			{
-	//				_oldWorking[worker] = worker.IsWorking;
-	//				PropertyChanged?.Invoke(worker, new PropertyChangedEventArgs(nameof()));
-	//			}
-	//		}
-	//	}
-	//}
 
 	private void RefreshCollections()
 	{

@@ -51,15 +51,45 @@
                     <ColumnDefinition   Width="*"/>
                     <ColumnDefinition   Width="*"/>
                 </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition   Width="auto"/>
+                        <ColumnDefinition   Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" 
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               Text="Время прибытия(с):"/>
+                    <TextBox Grid.Column="1" MinWidth="50" 
+                             Margin="15" 
+                             MaxWidth="100" 
+                             FontSize="24"
+                             Text="1,5"/>
+                    
+                </Grid>
 
-                <TextBox MinWidth="150" Margin="15" MaxWidth="150">
-                </TextBox>
                 <Button HorizontalAlignment="Left"
                     Grid.Column="1"
                         Content="Start" 
                         Command="{Binding StartCommand}"
                         Style="{StaticResource ActionButtonStyle}"
                         Background="#FF4CAF50" Foreground="White"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition   Width="auto"/>
+                        <ColumnDefinition   Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" 
+                       VerticalAlignment="Center"
+                       FontSize="20"
+                       Text="Время работы сотрудника(с):"/>
+                           <TextBox Grid.Column="1" MinWidth="50" 
+                         Margin="15" 
+                         MaxWidth="100" 
+                         FontSize="24"
+                         Text="1,5"/>
+
+                </Grid>
                 <StackPanel 
                     Grid.Row="1" Grid.Column="1"
                     Orientation="Horizontal">
@@ -92,7 +122,8 @@
                 <TextBlock Grid.Column="0" 
                            FontWeight="Bold" 
                            Margin="0,0,10,0" 
-                           VerticalAlignment="Center">
+                           VerticalAlignment="Center"
+                           FontSize="20">
                    <Run Text="Клиентов: "/>
                    <Run Text="{Binding Customers}"/>
                 </TextBlock>
@@ -133,7 +164,6 @@
             </ScrollViewer>
         </GroupBox>
 
-        <!-- Серверы -->
         <GroupBox Grid.Row="4" Header="Оффицианты" FontSize="14" FontWeight="Bold" 
                   BorderBrush="#FF2196F3" BorderThickness="2" Margin="0,0,0,5">
             <ScrollViewer VerticalScrollBarVisibility="Auto">

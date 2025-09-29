@@ -15,7 +15,7 @@ public class RandomCustomerArrival : ICustomerArrival
 	int _delay;
 	int _delta;
 	int _cookTime;
-	private DispatcherTimer _timer = new ();
+	private System.Timers.Timer _timer = new ();
 	private Random _random = new Random();
 	public RandomCustomerArrival(int delay, int delta, int cookTime)
 	{
@@ -34,8 +34,9 @@ public class RandomCustomerArrival : ICustomerArrival
 
 	private void RunTimer()
 	{
-		_timer.Interval =new TimeSpan( _delay + _random.Next(-_delta / 2, _delta / 2));
-		_timer.Tick +=
+		_timer.Interval = _delay + _random.Next(-_delta / 2, _delta / 2);
+		_timer.AutoReset = true;
+		_timer.Elapsed +=
 			(sender, args) => GenerateCustomer();
 
 		_timer.Start();
@@ -44,6 +45,7 @@ public class RandomCustomerArrival : ICustomerArrival
 	private void GenerateCustomer()
 	{
 		var custmoer = new Customer(new Order(_cookTime));
+		Console.WriteLine("Создан посетитель: " + custmoer.Name + "Поток ");
 		CustomerArrived?.Invoke(custmoer);
 	}
 }

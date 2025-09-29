@@ -2,8 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace oopLab1WPF;
 
@@ -17,7 +19,7 @@ public class Facility<T> where T : IWorker
 		get => _workers.ToArray();
 	}
 
-	ConcurrentQueue<Ticket> _ticketsToProcess = new();
+	Queue<Ticket> _ticketsToProcess = new();
 
 
 
@@ -30,23 +32,27 @@ public class Facility<T> where T : IWorker
 				return false;
 
 			_ticketsToProcess.TryPeek(out var ticket);
-
+			Console.WriteLine(" Попытка взять тикет: " + ticket.customer.Name);
 			foreach (var worker in _workers)
 			{
 				if (worker.TryTakeTicket(ticket))
 				{
 					choosedWorker = worker;
-					_ticketsToProcess.TryDequeue(out _);
+					_ticketsToProcess.TryDequeue(out var dequedTicket);
+					Console.WriteLine("В итоге взяли тикет: " + dequedTicket.customer.Name);
 					return true;
 				}
 			}
+			Console.WriteLine("Не Взят тикет: " + ticket.customer.Name);
+
+			return false;
 		}
-		return false;
 	}
 	public void AddTicket(Ticket ticket)
 	{
 		lock (_ticketsToProcess)
 		{
+			Console.WriteLine(" Передан в сооружение: " + typeof(T) + " Тикет: " + ticket.customer.Name);
 			_ticketsToProcess.Enqueue(ticket);
 			TryTakeTicket(out _);	
 		}

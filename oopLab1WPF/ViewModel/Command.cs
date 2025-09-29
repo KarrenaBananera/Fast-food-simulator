@@ -21,7 +21,7 @@ public class Command : ICommand
 	public event EventHandler CanExecuteChanged
 	{
 		add { _canExecuteChanged += value; }
-		remove { _canExecuteChanged -= value; }
+		remove { CanExecuteChanged -= value; }
 	}
 
 	public bool CanExecute(object? parameter) => true;
