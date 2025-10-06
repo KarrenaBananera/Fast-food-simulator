@@ -7,12 +7,15 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
+        <local:CustomersAmountConverter x:Key="CustomersAmountConverter"/>
+
         <local:BooleanToColorConverter x:Key="BooleanToColorConverter" 
                                       TrueColor="Green" FalseColor="Red"/>
 
         <local:BooleanToTextConverter x:Key="BooleanToTextConverter" 
                                      TrueText="Работает" FalseText="Свободен"/>
-
+        <local:MiliSecondsToSeconds x:Key="MiliSecondsToSeconds"/>
+        
         <Style x:Key="WorkerCardStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="#FFCCCCCC"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -104,19 +107,19 @@
                     <Button Grid.Column="0"
                         HorizontalAlignment="Stretch"
                         Content="Кассир" 
-                        Command="{Binding StartCommand}"
+                        Command="{Binding AddTakerCommand}"
                         Style="{StaticResource ActionButtonStyle}"
                         Background="#FF4CAF50" Foreground="White"/>
                     <Button Grid.Column="1"
                         Content="Повар" 
-                        Command="{Binding StartCommand}"
+                        Command="{Binding AddCookCommand}"
                         Style="{StaticResource ActionButtonStyle}"
                         HorizontalAlignment="Stretch"
                         Background="#FFFF9800" Foreground="White"/>
                     <Button Grid.Column="2"
                         HorizontalAlignment="Stretch"
                         Content="Оффицант" 
-                        Command="{Binding StartCommand}"
+                        Command="{Binding AddServerCommand}"
                         Style="{StaticResource ActionButtonStyle}"
                         Background="#FF2196F3" Foreground="White"/>
                 </Grid>
@@ -142,8 +145,15 @@
             </Grid>
         </Border>
 
-        <GroupBox Grid.Row="3" Header="Кухня" FontSize="14" FontWeight="Bold" 
+        <GroupBox Grid.Row="3" FontSize="14" FontWeight="Bold" 
                   BorderBrush="#FFFF9800" BorderThickness="2" Margin="0,0,0,5">
+
+            <GroupBox.Header>
+                <TextBlock FontWeight="Bold" FontSize="14">
+                <Run Text="Кухня, Клиентов: "/>
+                <Run Text="{Binding CustomersWaitingCook, Converter={StaticResource CustomersAmountConverter}}"/>    
+                </TextBlock>
+            </GroupBox.Header>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding KitchenWorkers}">
                     <ItemsControl.ItemsPanel>
@@ -165,7 +175,7 @@
                                                    FontWeight="Bold"/>
                                     </StackPanel>
 
-                                    <TextBlock Text="Повар" HorizontalAlignment="Center" 
+                                    <TextBlock Text="{Binding WorkTime, Converter={StaticResource MiliSecondsToSeconds}}" HorizontalAlignment="Center" 
                                                Margin="0,5,0,0" FontSize="10" Foreground="Gray"/>
                                 </StackPanel>
                             </Border>
@@ -175,8 +185,14 @@
             </ScrollViewer>
         </GroupBox>
 
-        <GroupBox Grid.Row="4" Header="Оффицианты" FontSize="14" FontWeight="Bold" 
+        <GroupBox Grid.Row="4" FontSize="14" FontWeight="Bold" 
                   BorderBrush="#FF2196F3" BorderThickness="2" Margin="0,0,0,5">
+            <GroupBox.Header>
+                <TextBlock FontWeight="Bold" FontSize="14">
+    <Run Text="Оффицанты, Клиентов: "/>
+    <Run Text="{Binding CustomersWaitingServer, Converter={StaticResource CustomersAmountConverter}}"/>
+                </TextBlock>
+            </GroupBox.Header>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding ServerWorkers}">
                     <ItemsControl.ItemsPanel>
@@ -197,7 +213,7 @@
                                         <TextBlock Text="{Binding IsWorking, Converter={StaticResource BooleanToTextConverter}}"
                                                    FontWeight="Bold"/>
                                     </StackPanel>
-                                    <TextBlock Text="Оффициант" HorizontalAlignment="Center" 
+                                    <TextBlock Text="{Binding WorkTime, Converter={StaticResource MiliSecondsToSeconds}}" HorizontalAlignment="Center" 
                                                Margin="0,5,0,0" FontSize="10" Foreground="Gray"/>
                                 </StackPanel>
                             </Border>
@@ -207,8 +223,14 @@
             </ScrollViewer>
         </GroupBox>
 
-        <GroupBox Grid.Row="2" Header="Кассиры" FontSize="14" FontWeight="Bold" 
+        <GroupBox Grid.Row="2" FontSize="14" FontWeight="Bold" 
                   BorderBrush="#FF4CAF50" BorderThickness="2">
+            <GroupBox.Header>
+                <TextBlock FontWeight="Bold" FontSize="14">
+    <Run Text="Кассиры, Клиентов: "/>
+    <Run Text="{Binding CustomersWaitingTaker, Converter={StaticResource CustomersAmountConverter}}"/>
+                </TextBlock>
+            </GroupBox.Header>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding TakerWorkers}">
                     <ItemsControl.ItemsPanel>
@@ -229,7 +251,7 @@
                                         <TextBlock Text="{Binding IsWorking, Converter={StaticResource BooleanToTextConverter}}"
                                                    FontWeight="Bold"/>
                                     </StackPanel>
-                                    <TextBlock Text="Кассир" HorizontalAlignment="Center" 
+                                    <TextBlock Text="{Binding WorkTime, Converter={StaticResource MiliSecondsToSeconds}}" HorizontalAlignment="Center" 
                                                Margin="0,5,0,0" FontSize="10" Foreground="Gray"/>
                                 </StackPanel>
                             </Border>

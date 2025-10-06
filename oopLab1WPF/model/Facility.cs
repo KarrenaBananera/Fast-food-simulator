@@ -13,7 +13,6 @@ public class Facility<T> where T : IWorker
 {
 	private ConcurrentBag<T> _workers = new();
 	public event Action<Ticket, T?>? FinishedWork;
-
 	public IReadOnlyList<T> Workers
 	{
 		get => _workers.ToArray();
@@ -66,6 +65,7 @@ public class Facility<T> where T : IWorker
 			{
 				worker.OnFinishWork += Worker_OnFinishWork;
 				_workers.Add(worker);
+				TryTakeTicket(out _);
 			}
 		}
 	}

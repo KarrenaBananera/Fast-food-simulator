@@ -11,6 +11,7 @@ public interface IWorker
 	public event EventHandler<TicketEventArgs> OnFinishWork;
 	public bool TryTakeTicket(Ticket ticket);
 	public bool IsWorking { get; }
+	public int WorkTime { get; }
 
 }
 

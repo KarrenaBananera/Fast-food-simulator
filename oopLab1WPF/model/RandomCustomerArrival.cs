@@ -17,13 +17,13 @@ public class RandomCustomerArrival : ICustomerArrival
 	int _cookTime;
 	private System.Timers.Timer _timer = new ();
 	private Random _random = new Random();
-	public RandomCustomerArrival(int delay, int delta, int cookTime)
+	public RandomCustomerArrival(int delay, int delta)
 	{
 		if (delay <= 0 || delta > delay)
 			throw new ArgumentException();
 		_delay = delay;
 		_delta = delta;
-		_cookTime = cookTime;
+		_cookTime = delay;
 	}
 	public void Start()
 	{

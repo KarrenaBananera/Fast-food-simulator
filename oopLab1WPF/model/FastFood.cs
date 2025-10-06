@@ -7,6 +7,9 @@ namespace oopLab1WPF;
 public class FastFood
 {
 	public int Customers { get; protected set; } = 0;
+	public int CustomersWaitingTaker { get; protected set; } = 0;
+	public int CustomersWaitingKitchen { get; protected set; } = 0;
+	public int CustomersWaitingServer { get; protected set; } = 0;
 
 	protected Facility<Cook> _kitchen = new();
 	protected Facility<Server> _servers = new();
@@ -47,6 +50,9 @@ public class FastFood
 	{
 		lock (_customerArrival)
 		{
+			CustomersWaitingTaker--;
+			CustomersWaitingKitchen++;
+
 			Console.WriteLine("Тикет передан на кухню: " + ticket.customer.Name);
 			_kitchen.AddTicket(ticket);
 		}
@@ -56,6 +62,8 @@ public class FastFood
 	{
 		lock (_customerArrival)
 		{
+			CustomersWaitingKitchen--;
+			CustomersWaitingServer++;
 			Console.WriteLine("Тикет передан офицантскому корпусу: " + ticket.customer.Name);
 
 			_servers.AddTicket(ticket);
@@ -68,6 +76,7 @@ public class FastFood
 		{
 			Console.WriteLine("Тикет передан посетителю!!!: " + ticket.customer.Name);
 			Customers--;
+			CustomersWaitingServer--;
 		}
 	}
 
@@ -84,6 +93,7 @@ public class FastFood
 				arrivedCustomer.Order, Guid.NewGuid().ToString());
 
 			Customers++;
+			CustomersWaitingTaker++;
 			Console.WriteLine("Появился кастомер, передан кассирам: " + arrivedCustomer.Name);
 			_takers.AddTicket(ticket);
 		}
